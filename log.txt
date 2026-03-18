@@ -1,0 +1,3 @@
+[2026-03-18T14:20:12.692993800] Producto agregado: Laptop, cantidad: 5
+[2026-03-18T14:20:26.756759300] Stock insuficiente para Laptop. Solicitado: 5, Disponible: 0
+[2026-03-18T14:23:44.325371800] Producto agregado: Laptop, cantidad: 2
