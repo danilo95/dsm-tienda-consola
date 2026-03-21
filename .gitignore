@@ -1,0 +1,22 @@
+# Gradle
+.gradle/
+build/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# Configuración local
+local.properties
+
+# Logs
+log.txt
+logs/
+
+# Archivos compilados
+*.class
+
+# Sistema
+.DS_Store
+Thumbs.db

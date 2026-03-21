@@ -1,3 +1,16 @@
 [2026-03-18T14:20:12.692993800] Producto agregado: Laptop, cantidad: 5
 [2026-03-18T14:20:26.756759300] Stock insuficiente para Laptop. Solicitado: 5, Disponible: 0
 [2026-03-18T14:23:44.325371800] Producto agregado: Laptop, cantidad: 2
+[2026-03-21T15:22:48.405275900] Producto agregado: Laptop, cantidad: 2
+[2026-03-21T15:52:19.243635100] Producto agregado: Laptop, cantidad: 2
+[2026-03-21T15:52:46.419840200] Compra confirmada. Total: $1921.00
+[2026-03-21T15:58:03.445763300] Producto agregado: Mouse, cantidad: 1
+[2026-03-21T15:58:13.976307800] Producto agregado: Laptop, cantidad: 1
+[2026-03-21T15:58:21.276145700] Producto agregado: Teclado, cantidad: 1
+[2026-03-21T15:58:28.185225900] Producto agregado: Monitor, cantidad: 2
+[2026-03-21T15:59:26.923498600] Producto eliminado del carrito: Monitor, cantidad: 1
+[2026-03-21T15:59:43.703903] Compra confirmada. Total: $1248.65
+[2026-03-21T16:00:47.329249100] Producto agregado: Monitor, cantidad: 3
+[2026-03-21T16:01:04.849041100] Intento de eliminar producto inexistente del carrito. ID: 2
+[2026-03-21T16:01:15.048913600] Producto eliminado del carrito: Monitor, cantidad: 2
+[2026-03-21T16:05:07.199640200] Producto agregado: Monitor, cantidad: 2
