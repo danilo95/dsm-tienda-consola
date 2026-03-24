@@ -1,0 +1,13 @@
+# Gradle
+.gradle/
+build/
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+
+# Logs
+log.txt
+
+# OS
+.DS_Store
