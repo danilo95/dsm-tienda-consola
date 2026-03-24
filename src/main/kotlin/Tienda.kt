@@ -16,6 +16,56 @@ class Tienda {
         }
     }
 
+    fun insertarProducto() {
+        try {
+            print("Ingrese el nombre del producto: ")
+            val nombre = readln().trim()
+
+            if (nombre.isBlank()) {
+                println("El nombre no puede estar vacío.")
+                Logger.registrar("Intento de creación con nombre vacío")
+                return
+            }
+
+            if (productos.any { it.nombre.equals(nombre, ignoreCase = true) }) {
+                println("Ya existe un producto con ese nombre.")
+                Logger.registrar("Intento de creación de producto duplicado: $nombre")
+                return
+            }
+
+            print("Ingrese el precio del producto: ")
+            val precio = readln().toDouble()
+
+            if (precio <= 0) {
+                println("El precio debe ser mayor a 0.")
+                Logger.registrar("Precio inválido al crear producto: $precio")
+                return
+            }
+
+            print("Ingrese la cantidad disponible: ")
+            val cantidadDisponible = readln().toInt()
+
+            if (cantidadDisponible < 0) {
+                println("La cantidad disponible no puede ser negativa.")
+                Logger.registrar("Stock inválido al crear producto: $cantidadDisponible")
+                return
+            }
+
+            val nuevoId = (productos.maxOfOrNull { it.id } ?: 0) + 1
+            productos.add(Producto(nuevoId, nombre, precio, cantidadDisponible))
+
+            println("Producto creado correctamente con ID $nuevoId.")
+            Logger.registrar("Producto creado: ID $nuevoId, nombre: $nombre, precio: $precio, stock: $cantidadDisponible")
+
+        } catch (e: NumberFormatException) {
+            println("Entrada inválida. Precio y cantidad deben ser numéricos.")
+            Logger.registrar("Error de formato al crear producto: ${e.message}")
+        } catch (e: Exception) {
+            println("No fue posible crear el producto.")
+            Logger.registrar("Error al crear producto: ${e.message}")
+        }
+    }
+
     fun agregarAlCarrito() {
         try {
             print("Ingrese el ID del producto: ")
@@ -85,13 +135,19 @@ class Tienda {
             println("1. Mostrar productos")
             println("2. Agregar producto al carrito")
             println("3. Ver carrito")
-            println("4. Salir")
+            println("4. Insertar producto")
+            println("5. Salir")
             print("Seleccione una opción: ")
 
-            opcion = try {
-                readln().toInt()
-            } catch (e: Exception) {
-                Logger.registrar("Opción inválida en menú: ${e.message}")
+            val entrada = readlnOrNull()
+            if (entrada == null) {
+                println("\nNo hay más entrada disponible. Saliendo del sistema...")
+                Logger.registrar("Entrada finalizada en menú. Salida automática.")
+                break
+            }
+
+            opcion = entrada.toIntOrNull() ?: run {
+                Logger.registrar("Opción inválida en menú: entrada no numérica ($entrada)")
                 -1
             }
 
@@ -99,10 +155,11 @@ class Tienda {
                 1 -> mostrarProductos()
                 2 -> agregarAlCarrito()
                 3 -> verCarrito()
-                4 -> println("Saliendo del sistema...")
+                4 -> insertarProducto()
+                5 -> println("Saliendo del sistema...")
                 else -> println("Opción inválida.")
             }
 
-        } while (opcion != 4)
+        } while (opcion != 5)
     }
 }
