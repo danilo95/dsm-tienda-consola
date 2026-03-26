@@ -65,6 +65,7 @@ class Tienda {
         println("\n--- CARRITO DE COMPRAS ---")
         if (carrito.isEmpty()) {
             println("El carrito está vacío.")
+            Logger.registrar("Se consultó el carrito, pero está vacío.")
             return
         }
 
@@ -75,6 +76,7 @@ class Tienda {
             println("${it.producto.nombre} - Cantidad: ${it.cantidad} - Subtotal: $$subtotal")
         }
         println("TOTAL: $$total")
+        Logger.registrar("Se consultó el carrito. Total actual: $$total")
     }
 
     fun menu() {
