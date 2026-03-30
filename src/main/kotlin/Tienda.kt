@@ -1,5 +1,4 @@
 class Tienda {
-    // cualquier producto agregar desde aca con id numeral en caso contrario modificar la clase producto
     private val productos = mutableListOf(
         Producto(1, "Laptop", 850.0, 5),
         Producto(2, "Mouse", 20.0, 10),
@@ -73,10 +72,77 @@ class Tienda {
         carrito.forEach {
             val subtotal = it.producto.precio * it.cantidad
             total += subtotal
-            println("${it.producto.nombre} - Cantidad: ${it.cantidad} - Subtotal: $$subtotal")
+            println("${it.producto.id}. ${it.producto.nombre} - Cantidad: ${it.cantidad} - Precio unitario: $${it.producto.precio} - Subtotal: $$subtotal")
         }
         println("TOTAL: $$total")
         Logger.registrar("Se consultó el carrito. Total actual: $$total")
+    }
+
+    fun eliminarDelCarrito() {
+        if (carrito.isEmpty()) {
+            println("El carrito está vacío. No hay productos para eliminar.")
+            Logger.registrar("Intento de eliminar producto del carrito vacío.")
+            return
+        }
+
+        println("\n--- ELIMINAR PRODUCTO DEL CARRITO ---")
+        carrito.forEach {
+            println("${it.producto.id}. ${it.producto.nombre} - Cantidad en carrito: ${it.cantidad}")
+        }
+
+        try {
+            print("Ingrese el ID del producto que desea eliminar: ")
+            val id = readln().toInt()
+
+            val item = carrito.find { it.producto.id == id }
+            if (item == null) {
+                println("Producto no encontrado en el carrito.")
+                Logger.registrar("Intento de eliminar producto no existente en carrito. ID: $id")
+                return
+            }
+
+            item.producto.cantidadDisponible += item.cantidad
+            carrito.remove(item)
+
+            println("Producto eliminado del carrito.")
+            Logger.registrar("Producto eliminado del carrito: ${item.producto.nombre}, cantidad devuelta al stock: ${item.cantidad}")
+        } catch (e: Exception) {
+            println("Entrada inválida. Debe ingresar un número correcto.")
+            Logger.registrar("Error al eliminar producto del carrito: ${e.message}")
+        }
+    }
+
+    fun generarFactura() {
+        if (carrito.isEmpty()) {
+            println("No se puede generar factura porque el carrito está vacío.")
+            Logger.registrar("Intento de generar factura con carrito vacío.")
+            return
+        }
+
+        println("\n========== FACTURA ==========")
+
+        var subtotalGeneral = 0.0
+
+        carrito.forEach {
+            val subtotalProducto = it.producto.precio * it.cantidad
+            subtotalGeneral += subtotalProducto
+            println("${it.producto.nombre} | Cantidad: ${it.cantidad} | Precio unitario: $${it.producto.precio} | Total: $$subtotalProducto")
+        }
+
+        val impuesto = subtotalGeneral * 0.13
+        val totalFinal = subtotalGeneral + impuesto
+
+        println("-----------------------------")
+        println("Subtotal general: $$subtotalGeneral")
+        println("Impuesto (13%): $$impuesto")
+        println("Total a pagar: $$totalFinal")
+        println("=============================")
+
+        Logger.registrar("Factura generada. Subtotal: $$subtotalGeneral, Impuesto: $$impuesto, Total final: $$totalFinal")
+
+        carrito.clear()
+        println("Compra confirmada. El carrito ha sido vaciado.")
+        Logger.registrar("Compra confirmada y carrito vaciado.")
     }
 
     fun menu() {
@@ -87,7 +153,9 @@ class Tienda {
             println("1. Mostrar productos")
             println("2. Agregar producto al carrito")
             println("3. Ver carrito")
-            println("4. Salir")
+            println("4. Eliminar producto del carrito")
+            println("5. Confirmar compra y generar factura")
+            println("6. Salir")
             print("Seleccione una opción: ")
 
             opcion = try {
@@ -101,10 +169,12 @@ class Tienda {
                 1 -> mostrarProductos()
                 2 -> agregarAlCarrito()
                 3 -> verCarrito()
-                4 -> println("Saliendo del sistema...")
+                4 -> eliminarDelCarrito()
+                5 -> generarFactura()
+                6 -> println("Saliendo del sistema...")
                 else -> println("Opción inválida.")
             }
 
-        } while (opcion != 4)
+        } while (opcion != 6)
     }
 }
