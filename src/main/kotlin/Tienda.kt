@@ -1,3 +1,6 @@
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 class Tienda {
     private val productos = mutableListOf(
         Producto(1, "Laptop", 850.0, 5),
@@ -8,8 +11,23 @@ class Tienda {
 
     private val carrito = mutableListOf<CarritoItem>()
 
+    fun mostrarEncabezado() {
+        println()
+        println("====================================================")
+        println("=            SISTEMA DE TIENDA EN CONSOLA          =")
+        println("=              Proyecto DSM - Kotlin               =")
+        println("====================================================")
+    }
+
+    fun mostrarSeparador(titulo: String) {
+        println()
+        println("----------------------------------------------------")
+        println(" $titulo")
+        println("----------------------------------------------------")
+    }
+
     fun mostrarProductos() {
-        println("\n--- LISTA DE PRODUCTOS ---")
+        mostrarSeparador("LISTA DE PRODUCTOS")
         productos.forEach {
             println("${it.id}. ${it.nombre} - $${it.precio} - Stock: ${it.cantidadDisponible}")
         }
@@ -23,7 +41,7 @@ class Tienda {
             val producto = productos.find { it.id == id }
             if (producto == null) {
                 println("Producto no encontrado.")
-                Logger.registrar("Intento de selección con ID inexistente: $id")
+                Logger.registrar("Intento de seleccion con ID inexistente: $id")
                 return
             }
 
@@ -32,7 +50,7 @@ class Tienda {
 
             if (cantidad <= 0) {
                 println("La cantidad debe ser mayor a 0.")
-                Logger.registrar("Cantidad inválida ingresada: $cantidad")
+                Logger.registrar("Cantidad invalida ingresada: $cantidad")
                 return
             }
 
@@ -55,16 +73,20 @@ class Tienda {
             Logger.registrar("Producto agregado: ${producto.nombre}, cantidad: $cantidad")
 
         } catch (e: Exception) {
-            println("Entrada inválida. Debe ingresar números correctos.")
+            println("Entrada invalida. Debe ingresar numeros correctos.")
             Logger.registrar("Error al agregar producto: ${e.message}")
         }
     }
 
     fun verCarrito() {
-        println("\n--- CARRITO DE COMPRAS ---")
+        mostrarSeparador("CARRITO DE COMPRAS")
         if (carrito.isEmpty()) {
+<<<<<<< HEAD
             println("El carrito está vacío.")
             Logger.registrar("Se consultó el carrito, pero está vacío.")
+=======
+            println("El carrito esta vacio.")
+>>>>>>> origin/master
             return
         }
 
@@ -72,7 +94,11 @@ class Tienda {
         carrito.forEach {
             val subtotal = it.producto.precio * it.cantidad
             total += subtotal
+<<<<<<< HEAD
             println("${it.producto.id}. ${it.producto.nombre} - Cantidad: ${it.cantidad} - Precio unitario: $${it.producto.precio} - Subtotal: $$subtotal")
+=======
+            println("${it.producto.id}. ${it.producto.nombre} - Cantidad: ${it.cantidad} - Subtotal: $$subtotal")
+>>>>>>> origin/master
         }
         println("TOTAL: $$total")
         Logger.registrar("Se consultó el carrito. Total actual: $$total")
@@ -145,23 +171,166 @@ class Tienda {
         Logger.registrar("Compra confirmada y carrito vaciado.")
     }
 
+    fun quitarUnidadesDelCarrito() {
+        mostrarSeparador("QUITAR UNIDADES DEL CARRITO")
+        if (carrito.isEmpty()) {
+            println("El carrito esta vacio.")
+            return
+        }
+
+        verCarrito()
+
+        try {
+            print("Ingrese el ID del producto al que desea quitar unidades: ")
+            val id = readln().toInt()
+
+            val item = carrito.find { it.producto.id == id }
+
+            if (item == null) {
+                println("Ese producto no esta en el carrito.")
+                Logger.registrar("Intento de quitar unidades de un producto no existente en carrito: $id")
+                return
+            }
+
+            print("Ingrese cuantas unidades desea quitar: ")
+            val cantidadAQuitar = readln().toInt()
+
+            if (cantidadAQuitar <= 0) {
+                println("La cantidad a quitar debe ser mayor a 0.")
+                Logger.registrar("Cantidad invalida para quitar unidades: $cantidadAQuitar")
+                return
+            }
+
+            if (cantidadAQuitar > item.cantidad) {
+                println("No puede quitar mas unidades de las que tiene en el carrito.")
+                Logger.registrar("Intento de quitar mas unidades de las disponibles en carrito. Producto: ${item.producto.nombre}, tiene: ${item.cantidad}, intento quitar: $cantidadAQuitar")
+                return
+            }
+
+            item.cantidad -= cantidadAQuitar
+            item.producto.cantidadDisponible += cantidadAQuitar
+
+            if (item.cantidad == 0) {
+                carrito.remove(item)
+                println("Se quitaron todas las unidades y el producto fue eliminado del carrito.")
+                Logger.registrar("Se eliminaron todas las unidades de ${item.producto.nombre} desde la opcion de quitar unidades")
+            } else {
+                println("Unidades quitadas correctamente.")
+                Logger.registrar("Se quitaron $cantidadAQuitar unidades de ${item.producto.nombre} del carrito")
+            }
+
+        } catch (e: Exception) {
+            println("Entrada invalida. Debe ingresar valores numericos.")
+            Logger.registrar("Error al quitar unidades del carrito: ${e.message}")
+        }
+    }
+
+    fun eliminarProductoCompletoDelCarrito() {
+        mostrarSeparador("ELIMINAR PRODUCTO COMPLETO DEL CARRITO")
+        if (carrito.isEmpty()) {
+            println("El carrito esta vacio.")
+            return
+        }
+
+        verCarrito()
+
+        try {
+            print("Ingrese el ID del producto que desea eliminar completamente: ")
+            val id = readln().toInt()
+
+            val item = carrito.find { it.producto.id == id }
+
+            if (item == null) {
+                println("Ese producto no esta en el carrito.")
+                Logger.registrar("Intento de eliminar producto completo no existente en carrito: $id")
+                return
+            }
+
+            item.producto.cantidadDisponible += item.cantidad
+            carrito.remove(item)
+
+            println("Producto eliminado completamente del carrito.")
+            Logger.registrar("Producto eliminado completamente del carrito: ${item.producto.nombre}, cantidad devuelta al stock: ${item.cantidad}")
+
+        } catch (e: Exception) {
+            println("Entrada invalida. Debe ingresar un ID numerico.")
+            Logger.registrar("Error al eliminar producto completo del carrito: ${e.message}")
+        }
+    }
+
+    fun confirmarCompra() {
+        mostrarSeparador("FACTURA DE COMPRA")
+        if (carrito.isEmpty()) {
+            println("No se puede confirmar la compra porque el carrito esta vacio.")
+            return
+        }
+
+        val fecha = LocalDateTime.now()
+        val formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+        val numeroFactura = "FAC-${System.currentTimeMillis()}"
+
+        var subtotalGeneral = 0.0
+
+        println("Numero de factura: $numeroFactura")
+        println("Fecha: ${fecha.format(formato)}")
+        println()
+        println("Detalle de compra:")
+
+        carrito.forEach {
+            val subtotalProducto = it.producto.precio * it.cantidad
+            subtotalGeneral += subtotalProducto
+            println("- ${it.producto.nombre} | Cantidad: ${it.cantidad} | Precio unitario: $${it.producto.precio} | Subtotal: $$subtotalProducto")
+        }
+
+        val iva = subtotalGeneral * 0.13
+        val totalFinal = subtotalGeneral + iva
+
+        println()
+        println("Subtotal: $$subtotalGeneral")
+        println("IVA (13%): $$iva")
+        println("TOTAL A PAGAR: $$totalFinal")
+        println()
+
+        print("Desea confirmar la compra? (S/N): ")
+        val confirmacion = readln().trim().uppercase()
+
+        if (confirmacion == "S") {
+            carrito.clear()
+            println()
+            println("Compra confirmada exitosamente.")
+            println("Factura generada correctamente en consola.")
+            Logger.registrar("Compra confirmada. Factura: $numeroFactura, Subtotal: $subtotalGeneral, IVA: $iva, Total: $totalFinal")
+        } else {
+            println("La compra fue cancelada.")
+            Logger.registrar("Compra cancelada por el usuario.")
+        }
+    }
+
     fun menu() {
         var opcion: Int
 
         do {
-            println("\n===== TIENDA EN CONSOLA =====")
+            mostrarEncabezado()
             println("1. Mostrar productos")
             println("2. Agregar producto al carrito")
             println("3. Ver carrito")
+<<<<<<< HEAD
             println("4. Eliminar producto del carrito")
             println("5. Confirmar compra y generar factura")
             println("6. Salir")
             print("Seleccione una opción: ")
+=======
+            println("4. Quitar unidades de un producto del carrito")
+            println("5. Eliminar producto completo del carrito")
+            println("6. Confirmar compra y generar factura")
+            println("7. Salir")
+            print("Seleccione una opcion: ")
+>>>>>>> origin/master
 
             opcion = try {
                 readln().toInt()
             } catch (e: Exception) {
-                Logger.registrar("Opción inválida en menú: ${e.message}")
+                Logger.registrar("Opcion invalida en menu: ${e.message}")
                 -1
             }
 
@@ -169,6 +338,7 @@ class Tienda {
                 1 -> mostrarProductos()
                 2 -> agregarAlCarrito()
                 3 -> verCarrito()
+<<<<<<< HEAD
                 4 -> eliminarDelCarrito()
                 5 -> generarFactura()
                 6 -> println("Saliendo del sistema...")
@@ -176,5 +346,15 @@ class Tienda {
             }
 
         } while (opcion != 6)
+=======
+                4 -> quitarUnidadesDelCarrito()
+                5 -> eliminarProductoCompletoDelCarrito()
+                6 -> confirmarCompra()
+                7 -> println("Saliendo del sistema...")
+                else -> println("Opcion invalida.")
+            }
+
+        } while (opcion != 7)
+>>>>>>> origin/master
     }
 }

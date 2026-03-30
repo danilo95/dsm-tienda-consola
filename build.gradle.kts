@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.tasks.JavaExec
 
 plugins {
     kotlin("jvm") version "1.6.21"
@@ -22,6 +23,10 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+tasks.named<JavaExec>("run") {
+    standardInput = System.`in`
 }
 
 application {
